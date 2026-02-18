@@ -70,13 +70,13 @@ class Ontology:
         rows = self.object_repo.get_all()
 
         return [
-            ObjectType(id=row.id, name=row.name, parentId=row.parent_id)
+            ObjectType(id=row.id, name=row.name, parentId=row.parent_id, repo=self.object_repo)
             for row in rows
         ]
 
     def createRelationType(self, name: str, parentId: int | None, signature):
 
-        rel = RelationType(name=name, parentId=parentId, signature=signature)
+        rel = RelationType(name=name, parentId=parentId, signature=signature, repo=self.relation_repo)
 
         self.relation_repo.save(rel)
 
@@ -103,7 +103,7 @@ class Ontology:
         rows = self.relation_repo.get_all()
 
         return [
-            RelationType(id=row.id, name=row.name, parentId=row.parent_id, signature=row.signature)
+            RelationType(id=row.id, name=row.name, parentId=row.parent_id, signature=row.signature, repo=self.relation_repo)
             for row in rows
         ]
     
@@ -137,7 +137,7 @@ class Ontology:
         rows = self.signature_repo.get_all()
 
         return [
-            RelationSignature(id=row.id, name=row.name, objectType1=row.object_type1, objectType2=row.object_type2)
+            RelationSignature(id=row.id, name=row.name, objectType1=row.object_type1, objectType2=row.object_type2, repo=self.signature_repo)
             for row in rows
         ]
     
@@ -201,7 +201,7 @@ class Ontology:
     
     def createConstraintSignature(self, name: str, domains: list):
 
-        signature = ConstraintSignature(name=name, domains=domains)
+        signature = ConstraintSignature(name=name, domains=domains, repo=self.constraint_signature_repo)
 
         self.constraint_signature_repo.save(signature)
 
@@ -224,13 +224,13 @@ class Ontology:
         rows = self.constraint_signature_repo.get_all()
 
         return [
-            ConstraintSignature(id=row.id, name=row.name, domains=row.domains)
+            ConstraintSignature(id=row.id, name=row.name, domains=row.domains, repo=self.constraint_signature_repo)
             for row in rows
         ]
     
     def createConstraintType(self, name: str, signature, cRel):
 
-        ct = ConstraintType(name=name, signature=signature, cRelation=cRel)
+        ct = ConstraintType(name=name, signature=signature, cRelation=cRel, repo=self.constraint_type_repo)
 
         self.constraint_type_repo.save(ct)
 
@@ -253,13 +253,13 @@ class Ontology:
         rows = self.constraint_type_repo.get_all()
 
         return [
-            ConstraintType(id=row.id, name=row.name, signature=row.signature, cRelation=row.c_relation)
+            ConstraintType(id=row.id, name=row.name, signature=row.signature, cRelation=row.c_relation, repo=self.constraint_type_repo)
             for row in rows
         ]
     
     def createTuple(self, name: str, values: list, arity: int):
 
-        tup = Tuple(name=name, values=values, arity=arity)
+        tup = Tuple(name=name, values=values, arity=arity, repo=self.tuple_repo)
 
         self.tuple_repo.save(tup)
 
@@ -282,13 +282,13 @@ class Ontology:
         rows = self.tuple_repo.get_all()
 
         return [
-            Tuple(id=row.id, name=row.name, values=row.values, arity=row.arity)
+            Tuple(id=row.id, name=row.name, values=row.values, arity=row.arity, repo=self.tuple_repo)
             for row in rows
         ]
 
     def createCRelation(self, name: str, tupleObj, typeObj):
 
-        cRel = CRelation(name=name, tuples=[tupleObj], type=typeObj)
+        cRel = CRelation(name=name, tuples=[tupleObj], type=typeObj, repo=self.crelation_repo)
 
         self.crelation_repo.save(cRel)
 
@@ -311,7 +311,7 @@ class Ontology:
         rows = self.crelation_repo.get_all()
 
         return [
-            CRelation(id=row.id, name=row.name, tuples=row.tuples, type=row.type)
+            CRelation(id=row.id, name=row.name, tuples=row.tuples, type=row.type, repo=self.crelation_repo)
             for row in rows
         ]
     
@@ -321,7 +321,8 @@ def createQuantityRole(self, name: str, domain, seType):
     qRole = QuantityRole(
         name=name,
         domain=domain,
-        owner=seType
+        owner=seType,
+        repo=self.quantity_role_repo
     )
 
     self.quantity_role_repo.save(qRole)
@@ -346,7 +347,7 @@ def getAllQuantityRoles(self):
     rows = self.quantity_role_repo.get_all()
 
     return [
-        QuantityRole(id=row.id, name=row.name, domain=row.domain, owner=row.owner)
+        QuantityRole(id=row.id, name=row.name, domain=row.domain, owner=row.owner, repo=self.quantity_role_repo)
         for row in rows
     ]
 
